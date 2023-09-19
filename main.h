@@ -5,15 +5,15 @@
 #include <unistd.h>
 
 /**
- * struct print_func - Struct for conversion specifiers
- * and their corresponding functions
+ * struct print_func - Struct for conversion specifiers and their functions
  * @specifier: Conversion specifier
  * @func: Corresponding function
  */
+
 typedef struct print_func
 {
-char *specifier;
-int (*func)(va_list);
+    char *specifier;
+    int (*func)(va_list);
 } print_func_t;
 
 int _printf(const char *format, ...);
@@ -46,4 +46,3 @@ int print_reversed_string(va_list args);
 int print_rot13_string(va_list args);
 
 #endif /* MAIN_H */
-
