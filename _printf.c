@@ -1,59 +1,45 @@
 #include "main.h"
 #include <unistd.h>
-#include <stdarg.h>
 
 /**
- * _printf - Produces output according to a format.
- * @format: A character string containing zero or more directives.
+ * _printf - Custom printf function
+ * @format: The format string
+ * @...: The variable number of arguments
  *
- * Return: The number of characters printed (excluding the null byte used to
- * end output to strings).
+ * Return: Number of characters printed (excluding null byte)
  */
 int _printf(const char *format, ...)
-{       
-        int count = 0;
-        
-        va_list args;
-        
-        if (format == NULL)
-                return (-1);
-        
-        va_start(args, format);
-        
-        for (int i = 0; format[i] != '\0'; i++)
-        {       
-                if (format[i] == '%')
-                {       
-                        i++;
-                        if (format[i] == 'c')
-                        {       
-                                char c = va_arg(args, int);
-                                write(1, &c, 1);
-                                count++;
-                        }       
-                        else if (format[i] == 's')
-                        {       
-                                char *str = va_arg(args, char *);
-                                int j = 0;
-                                while (str[j] != '\0')
-                                {       
-                                        write(1, &str[j], 1);
-                                        count++;
-                                        j++;
-                                }       
-                        }       
-                        else if (format[i] == '%')
-                        {       
-                                write(1, "%", 1);
-                                count++;
-                        }       
-                }       
-                else
-                {       
-                        write(1, &format[i], 1);
+{
+	va_list args;
+	int i, count = 0;
+
+	va_start(args, format);
+	for (i = 0; format && format[i]; i++)
+	{
+		if (format[i] == '%')
+		{
+			i++;
+			if (format[i] == '\0')
+				return (-1);
+			if (format[i] == 'c')
+				count += print_char(va_arg(args, int));
+			else if (format[i] == 's')
+				count += print_string(va_arg(args, char *));
+			else if (format[i] == 'd' || format[i] == 'i')
+				count += print_int(va_arg(args, int));
+			else
+			{
+				write(1, "%", 1);
+				write(1, &format[i], 1);
+				count += 2;
+			}
+		}
+		else
+		{
+			write(1, &format[i], 1);
 			count++;
 		}
 	}
 	va_end(args);
-	return count;
+	return (count);
 }
